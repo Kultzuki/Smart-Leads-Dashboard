@@ -4,32 +4,6 @@ import { useAuthStore } from '../store/authStore';
 import { LayoutDashboard, Users, FileDown, LogOut, Menu, X } from 'lucide-react';
 import api from '../api/axios';
 
-const Layout: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, logout } = useAuthStore();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  const handleExport = async () => {
-    try {
-      const response = await api.get('/leads/export', { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'leads.csv');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Export failed', error);
-      alert('Failed to export leads');
-    }
-  };
-
 interface NavItemProps {
   to?: string;
   icon: React.ElementType;
@@ -73,6 +47,30 @@ const NavItem = ({ to, icon: Icon, children, onClick, setSidebarOpen }: NavItemP
 };
 
 const Layout: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const handleExport = async () => {
+    try {
+      const response = await api.get('/leads/export', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'leads.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Export failed', error);
+      alert('Failed to export leads');
+    }
+  };
 
   return (
     <div className="min-h-screen flex bg-gray-900 text-gray-100">
